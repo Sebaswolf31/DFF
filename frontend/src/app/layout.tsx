@@ -17,12 +17,12 @@ const nunito = Nunito({
 export const metadata: Metadata = {
   title: 'DFYF Project',
   description: 'Precisión en Cada Puntada',
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 1,
-    userScalable: false,
-  },
+  // viewport: {
+  //   width: 'device-width',
+  //   initialScale: 1,
+  //   maximumScale: 1,
+  //   userScalable: false,
+  // },
 };
 
 export default function RootLayout({
