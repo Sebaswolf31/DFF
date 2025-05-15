@@ -33,9 +33,9 @@ export default function MisionPage() {
         <p className='text-lg leading-relaxed'>
           Cada prenda que creamos lleva consigo nuestro sello de responsabilidad
           social. Implementamos sistemas de producción circular que reducen el
-          desperdicio textil en un 40%de nuestros procesos. Nuestra meta es transformar la industria de la
-          moda mediante prácticas que equilibren el éxito comercial con el
-          bienestar planetario.
+          desperdicio textil en un 40% de nuestros procesos. Nuestra meta es
+          transformar la industria de la moda mediante prácticas que equilibren
+          el éxito comercial con el bienestar planetario.
         </p>
       </div>
     </div>
