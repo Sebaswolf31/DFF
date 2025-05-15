@@ -6,7 +6,7 @@ import Footer from './components/footer';
 import Navbar from './components/navbar';
 import { AuthProvider } from './contexts/authContext';
 import { Toaster } from 'react-hot-toast';
-import Image from 'next/image';
+
 
 const nunito = Nunito({
   variable: '--font-nunito',
