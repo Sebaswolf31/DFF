@@ -1,7 +1,11 @@
 {
+  "rootDirectory": "frontend",
   "build": {
-    "env": {
-      "ESLINT_NO_DEV_ERRORS": "true"
-    }
+    "env": {},
+    "commands": {
+      "install": "npm install",
+      "build": "npm run build"
+    },
+    "outputDirectory": ".next"
   }
 }
