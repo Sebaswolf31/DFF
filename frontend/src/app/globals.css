@@ -2,10 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+  .prose-mobile {
+    @apply text-base leading-relaxed;
+    p {
+      @apply mb-4;
+    }
+    h2 {
+      @apply text-2xl font-bold mt-8 mb-4;
+    }
+  }
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
-  --font-sans: "Nunito", sans-serif;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -15,29 +26,16 @@
   }
 }
 
-/* Reglas críticas para mobile */
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans);
-  min-height: 100vh;
-  min-height: 100dvh; /* Nueva unidad para mobile */
-  overflow-x: hidden;
+  @apply bg-background text-foreground min-h-[100dvh] overflow-x-hidden;
 }
 
-/* Evita desbordamientos en móviles */
 img, video, canvas {
-  max-width: 100%;
-  height: auto;
+  @apply max-w-full h-auto;
 }
 
-/* Mejor tratamiento de textos en móvil */
-h1, h2, h3 {
-  word-wrap: break-word;
-  hyphens: auto;
-}
-
-/* Clase adicional para contenedores mobile-first */
-.container-mobile {
-  @apply w-full px-4 sm:px-6 lg:px-8 mx-auto;
+@media (pointer: coarse) {
+  button, a {
+    @apply min-w-[48px] min-h-[48px];
+  }
 }

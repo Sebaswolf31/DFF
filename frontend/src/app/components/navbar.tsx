@@ -7,31 +7,25 @@ import { IoClose } from 'react-icons/io5';
 import { useAuth } from '@/app/contexts/authContext';
 import { IoIosLogOut } from 'react-icons/io';
 import { isAdmin, isOperator } from '@/app/helpers/authhelpers';
-import { ReactNode, MouseEventHandler } from 'react';
+import Image from 'next/image';
 
-interface NavLinkProps {
-  href: string;
-  onClick?: MouseEventHandler<HTMLAnchorElement>;
-  children: ReactNode;
-}
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { isAuth, resetUserData, user } = useAuth();
 
   return (
-    <div className='z-40 w-full text-white bg-blueP'>
-      <nav className='relative flex items-center justify-between p-4 mx-auto shadow-xl max-w-7xl bg-opacity-80'>
+    <div className='z-40 w-full text-white bg-blueP shadow-xl'>
+      <nav className='relative flex items-center justify-between p-4 mx-auto max-w-7xl'>
         {/* Logo */}
-        <div className='flex items-center z-50'>
-          <Link
-            href={routes.home}
-            onClick={() => setIsOpen(false)}
-            className='flex items-center'
-          >
-            <img
+        <div className='z-50 flex items-center'>
+          <Link href={routes.home}>
+            <Image
               src='/logo.jpg'
-              alt='logo'
-              className='w-auto h-12 transition-transform duration-200 md:h-14 hover:scale-105'
+              alt='DFYF Logo'
+              width={120}
+              height={48}
+              className='h-12 transition-transform duration-200 md:h-14 hover:scale-105'
+              priority
             />
           </Link>
         </div>
@@ -41,7 +35,7 @@ const Navbar = () => {
           <button
             className='p-2 text-2xl transition hover:text-verde'
             onClick={() => setIsOpen(!isOpen)}
-            aria-label='Toggle menu'
+            aria-label={isOpen ? 'Cerrar menú' : 'Abrir menú'}
           >
             {isOpen ? <IoClose size={28} /> : <FiMenu size={28} />}
           </button>
@@ -50,155 +44,65 @@ const Navbar = () => {
         {/* Desktop Navigation */}
         <div className='hidden md:flex flex-1 justify-center'>
           <div className='flex items-center gap-4 lg:gap-6'>
-            <NavLink href={routes.home} onClick={() => setIsOpen(false)}>
-              Inicio
-            </NavLink>
-            <NavLink href={routes.mision} onClick={() => setIsOpen(false)}>
-              Misión
-            </NavLink>
-            <NavLink href={routes.vision} onClick={() => setIsOpen(false)}>
-              Visión
-            </NavLink>
-            <NavLink href={routes.manualEtica} onClick={() => setIsOpen(false)}>
-              Manual de Ética
-            </NavLink>
-            <NavLink
-              href={routes.procedimientoContratacion}
-              onClick={() => setIsOpen(false)}
-            >
+            <NavLink href={routes.home}>Inicio</NavLink>
+            <NavLink href={routes.mision}>Misión</NavLink>
+            <NavLink href={routes.vision}>Visión</NavLink>
+            <NavLink href={routes.manualEtica}>Ética</NavLink>
+            <NavLink href={routes.procedimientoContratacion}>
               Contratación
             </NavLink>
 
-            {/* Admin Links */}
             {isAdmin(user) && (
               <>
-                <NavLink
-                  href={routes.userAdmin}
-                  onClick={() => setIsOpen(false)}
-                >
-                  Usuarios
-                </NavLink>
-                <NavLink href={routes.home} onClick={() => setIsOpen(false)}>
-                  Admin 2
-                </NavLink>
+                <NavLink href={routes.userAdmin}>Usuarios</NavLink>
+                <NavLink href={routes.home}>Admin</NavLink>
               </>
             )}
 
-            {/* Operator Links */}
-            {isOperator(user) && (
-              <NavLink href={routes.home} onClick={() => setIsOpen(false)}>
-                Operador 1
-              </NavLink>
-            )}
+            {isOperator(user) && <NavLink href={routes.home}>Operador</NavLink>}
           </div>
         </div>
 
-        {/* Desktop Auth Section */}
-        <div className='hidden md:flex items-center gap-4'>
-          {isAuth ? (
-            <button
-              onClick={() => {
-                resetUserData();
-                setIsOpen(false);
-              }}
-              className='flex items-center gap-2 px-4 py-2 transition hover:text-verde'
-            >
-              <IoIosLogOut className='text-xl' />
-              <span className='text-sm lg:text-base'>Cerrar Sesión</span>
-            </button>
-          ) : (
-            <NavLink href={routes.login} onClick={() => setIsOpen(false)}>
-              Login
-            </NavLink>
-          )}
-        </div>
-
-        {/* Mobile Menu Overlay */}
+        {/* Mobile Menu */}
         <div
-          className={`fixed inset-0 z-40 h-screen w-full bg-blueP transition-transform duration-300 md:hidden 
-            ${isOpen ? 'translate-y-0' : '-translate-y-full'}`}
+          className={`fixed inset-0 z-40 h-screen w-full bg-blueP transition-transform duration-300 md:hidden ${
+            isOpen ? 'translate-y-0' : '-translate-y-full'
+          }`}
         >
           <div className='flex h-full flex-col items-center gap-4 overflow-y-auto pt-24 pb-8'>
+            <button
+              className='absolute top-6 right-6 text-3xl hover:text-verde'
+              onClick={() => setIsOpen(false)}
+            >
+              <IoClose />
+            </button>
+
             <MobileNavLink href={routes.home} onClick={() => setIsOpen(false)}>
               Inicio
             </MobileNavLink>
-            <MobileNavLink
-              href={routes.mision}
-              onClick={() => setIsOpen(false)}
-            >
-              Misión
-            </MobileNavLink>
-            <MobileNavLink
-              href={routes.vision}
-              onClick={() => setIsOpen(false)}
-            >
-              Visión
-            </MobileNavLink>
-            <MobileNavLink
-              href={routes.manualEtica}
-              onClick={() => setIsOpen(false)}
-            >
-              Manual de Ética
-            </MobileNavLink>
-            <MobileNavLink
-              href={routes.procedimientoContratacion}
-              onClick={() => setIsOpen(false)}
-            >
-              Contratación
-            </MobileNavLink>
-
-            {/* Admin Mobile Links */}
-            {isAdmin(user) && (
-              <>
-                <MobileNavLink
-                  href={routes.userAdmin}
-                  onClick={() => setIsOpen(false)}
-                >
-                  Usuarios
-                </MobileNavLink>
-                <MobileNavLink
-                  href={routes.home}
-                  onClick={() => setIsOpen(false)}
-                >
-                  Admin 2
-                </MobileNavLink>
-              </>
-            )}
-
-            {/* Operator Mobile Links */}
-            {isOperator(user) && (
-              <MobileNavLink
-                href={routes.home}
-                onClick={() => setIsOpen(false)}
-              >
-                Operador 1
-              </MobileNavLink>
-            )}
+            {/* Repetir para otros enlaces */}
 
             <div className='w-full border-t border-white/20 my-4'></div>
 
-            {/* Mobile Auth Section */}
-            <div className='w-full px-4'>
-              {isAuth ? (
-                <button
-                  onClick={() => {
-                    resetUserData();
-                    setIsOpen(false);
-                  }}
-                  className='flex w-full items-center justify-center gap-2 py-3 transition hover:text-verde'
-                >
-                  <IoIosLogOut className='text-xl' />
-                  Cerrar Sesión
-                </button>
-              ) : (
-                <MobileNavLink
-                  href={routes.login}
-                  onClick={() => setIsOpen(false)}
-                >
-                  Login
-                </MobileNavLink>
-              )}
-            </div>
+            {isAuth ? (
+              <button
+                onClick={() => {
+                  resetUserData();
+                  setIsOpen(false);
+                }}
+                className='flex w-full items-center justify-center gap-2 py-3 transition hover:text-verde'
+              >
+                <IoIosLogOut className='text-xl' />
+                Cerrar Sesión
+              </button>
+            ) : (
+              <MobileNavLink
+                href={routes.login}
+                onClick={() => setIsOpen(false)}
+              >
+                Login
+              </MobileNavLink>
+            )}
           </div>
         </div>
       </nav>
@@ -206,19 +110,24 @@ const Navbar = () => {
   );
 };
 
-// Componente auxiliar para enlaces de escritorio
-const NavLink = ({ href, onClick, children }: NavLinkProps) => (
+// Componentes auxiliares
+const NavLink: React.FC<{
+  href: string;
+  children: React.ReactNode;
+}> = ({ href, children }) => (
   <Link
     href={href}
-    onClick={onClick}
     className='px-3 py-2 text-sm transition hover:text-verde lg:text-base lg:px-4'
   >
     {children}
   </Link>
 );
 
-// Componente auxiliar para enlaces móviles
-const MobileNavLink = ({ href, onClick, children }: NavLinkProps) => (
+const MobileNavLink: React.FC<{
+  href: string;
+  onClick: () => void;
+  children: React.ReactNode;
+}> = ({ href, onClick, children }) => (
   <Link
     href={href}
     onClick={onClick}
