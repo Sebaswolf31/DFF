@@ -7,7 +7,13 @@ import { IoClose } from 'react-icons/io5';
 import { useAuth } from '@/app/contexts/authContext';
 import { IoIosLogOut } from 'react-icons/io';
 import { isAdmin, isOperator } from '@/app/helpers/authhelpers';
+import { ReactNode, MouseEventHandler } from 'react';
 
+interface NavLinkProps {
+  href: string;
+  onClick?: MouseEventHandler<HTMLAnchorElement>;
+  children: ReactNode;
+}
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { isAuth, resetUserData, user } = useAuth();
@@ -201,7 +207,7 @@ const Navbar = () => {
 };
 
 // Componente auxiliar para enlaces de escritorio
-const NavLink = ({ href, onClick, children }) => (
+const NavLink = ({ href, onClick, children }: NavLinkProps) => (
   <Link
     href={href}
     onClick={onClick}
@@ -212,7 +218,7 @@ const NavLink = ({ href, onClick, children }) => (
 );
 
 // Componente auxiliar para enlaces móviles
-const MobileNavLink = ({ href, onClick, children }) => (
+const MobileNavLink = ({ href, onClick, children }: NavLinkProps) => (
   <Link
     href={href}
     onClick={onClick}
