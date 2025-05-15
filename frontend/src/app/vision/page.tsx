@@ -11,15 +11,14 @@ export default function VisionPage() {
           impulsando una moda ética y sostenible que genere un impacto positivo
           en la comunidad y el medio ambiente a través de prácticas
           empresariales responsables.
-          <span className='text-verde font-semibold'> Nuestra ambición</span>
+          <span className='text-verde font-semibold'> Nuestra ambición </span>
           es diseñar y producir prendas que no solo destaquen por su estilo y
           calidad, sino que también respeten los recursos naturales y valoren a
-          las personas que forman parte de nuestra cadena de valor. A través de
-          la innovación con materiales reciclados, procesos de bajo impacto
-          ambiental y la promoción de condiciones laborales justas, buscamos
-          inspirar a nuestros clientes y aliados a adoptar un consumo consciente
-          y duradero.
-          <span className='text-verde font-semibold'>Nuestra aspiración</span>
+          las personas que forman parte de nuestra cadena de valor.
+        </p>
+
+        <p className='text-lg leading-relaxed'>
+          <span className='text-verde font-semibold'> Nuestra aspiración </span>
           es ser un motor de cambio en las comunidades, apoyando iniciativas que
           empoderen a artesanos, mujeres y jóvenes, al mismo tiempo que
           fomentamos la educación sobre sostenibilidad. Queremos construir un
