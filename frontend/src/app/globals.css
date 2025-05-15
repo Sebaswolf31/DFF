@@ -2,21 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer utilities {
-  .prose-mobile {
-    @apply text-base leading-relaxed;
-    p {
-      @apply mb-4;
-    }
-    h2 {
-      @apply text-2xl font-bold mt-8 mb-4;
-    }
-  }
-}
-
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --font-sans: "Nunito", sans-serif;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -27,15 +16,7 @@
 }
 
 body {
-  @apply bg-background text-foreground min-h-[100dvh] overflow-x-hidden;
-}
-
-img, video, canvas {
-  @apply max-w-full h-auto;
-}
-
-@media (pointer: coarse) {
-  button, a {
-    @apply min-w-[48px] min-h-[48px];
-  }
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
 }
