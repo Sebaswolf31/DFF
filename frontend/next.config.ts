@@ -1,7 +1,12 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
-  /* config options here */
+import type { NextConfig } from 'next';
+const nextConfig = {
+  output: 'standalone', // Para deploy en Vercel
+  images: {
+    formats: ['image/avif', 'image/webp'],
+    minimumCacheTTL: 60,
+  },
+  // Si usas rutas estáticas
+  trailingSlash: true,
 };
 
-export default nextConfig;
+module.exports = nextConfig;
