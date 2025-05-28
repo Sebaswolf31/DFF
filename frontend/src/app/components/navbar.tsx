@@ -1,216 +1,232 @@
 'use client';
 import Link from 'next/link';
-import { routes } from '@/app/routes/routes'; // Asegúrate que esta ruta es correcta
-import { useState } from 'react';
+import { routes } from '@/app/routes/routes';
+import { useState, useEffect } from 'react';
 import { FiMenu } from 'react-icons/fi';
-import { IoClose, IoLogOut } from 'react-icons/io5'; // IoIosLogOut ya estaba aquí
-import { useAuth } from '@/app/contexts/authContext'; // Asegúrate que esta ruta es correcta
-import { isAdmin, isOperator } from '@/app/helpers/authhelpers'; // Asegúrate que esta ruta es correcta
+import { IoClose, IoLogOut } from 'react-icons/io5';
+import { useAuth } from '@/app/contexts/authContext';
+import { isAdmin, isOperator } from '@/app/helpers/authhelpers';
 import Image from 'next/image';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { isAuth, resetUserData, user } = useAuth();
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const closeMenu = () => setIsOpen(false);
 
+  if (!isMounted) {
+    return <div className='h-20' />;
+  }
+
+  const GeneralLinks = () => (
+    <>
+      <NavLink href={routes.home}>Inicio</NavLink>
+      <NavLink href={routes.mision}>Misión</NavLink>
+      <NavLink href={routes.vision}>Visión</NavLink>
+      <NavLink href={routes.manualEtica}>Ética</NavLink>
+      <NavLink href={routes.procedimientoContratacion}>Contratación</NavLink>
+    </>
+  );
+
+  const AdminLinks = () => (
+    <>
+      <NavLink href={routes.home}>Dashboard</NavLink>
+      <NavLink href={routes.users}>Usuarios</NavLink>
+      <NavLink href={routes.companies}>Empresas</NavLink>
+      <NavLink href={routes.home}>Pagos</NavLink>
+      <NavLink href={routes.home}>Operaciones</NavLink>
+      <NavLink href={routes.home}>Liquidaciones</NavLink>
+    </>
+  );
+
   return (
-    <div className='sticky top-0 z-40 w-full text-white bg-blueP shadow-xl'>
-      <nav className='relative flex items-center justify-between p-4 mx-auto max-w-7xl'>
-        {/* Logo */}
-        <div className='z-50 flex items-center'>
+    <div className='z-40 text-white bg-blueP'>
+      <nav className='flex items-center justify-between h-20 p-4 mx-auto shadow-xl max-w-7xl'>
+        {/* Logo y saludo */}
+        <div className='z-50 flex items-center gap-4'>
           <Link href={routes.home} onClick={isOpen ? closeMenu : undefined}>
             <Image
               src='/logo.jpg'
               alt='DFYF Logo'
               width={120}
               height={48}
-              className='h-12 transition-transform duration-200 md:h-14 hover:scale-105'
+              className='w-auto h-12'
               priority
             />
           </Link>
+          <p className='ml-4'>
+            {user?.name ? (
+              <>
+                ¡Hola,{' '}
+                <span className='font-medium text-greenP'>
+                  {user.name.trim().split(' ')[0]}
+                </span>
+                ! 👋
+              </>
+            ) : (
+              '¡Bienvenido! 👋'
+            )}
+          </p>
         </div>
 
-        {/* Mobile Menu Button */}
+        {/* Menú Desktop */}
+        <div className='hidden md:flex items-center gap-6'>
+          {!isAuth || !isAdmin(user) ? <GeneralLinks /> : <AdminLinks />}
+
+          <div className='ml-4'>
+            {!isAuth ? (
+              <NavLink href={routes.login}>Iniciar Sesión</NavLink>
+            ) : (
+              <button
+                onClick={resetUserData}
+                className='flex items-center gap-2 px-4 py-2 transition hover:text-greenP'
+              >
+                <IoLogOut className='text-xl' />
+                Salir
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* Menú Mobile */}
         <div className='md:hidden z-50'>
-          {' '}
-          {/* z-50 para estar sobre el menú móvil */}
           <button
-            className='p-2 text-2xl transition hover:text-greenP' // Cambié 'hover:text-verde' a 'hover:text-greenP' para coincidir con tu tailwind.config
+            className='p-2 text-2xl transition hover:text-greenP'
             onClick={() => setIsOpen(!isOpen)}
             aria-label={isOpen ? 'Cerrar menú' : 'Abrir menú'}
-            aria-expanded={isOpen}
           >
             {isOpen ? <IoClose size={28} /> : <FiMenu size={28} />}
           </button>
         </div>
 
-        {/* Desktop Navigation */}
-        <div className='hidden md:flex flex-1 justify-center items-center'>
-          <div className='flex items-center gap-3 lg:gap-5'>
-            {' '}
-            {/* Ajustado gap ligeramente */}
-            <NavLink href={routes.home}>Inicio</NavLink>
-            <NavLink href={routes.mision}>Misión</NavLink>
-            <NavLink href={routes.vision}>Visión</NavLink>
-            <NavLink href={routes.manualEtica}>Ética</NavLink>
-            <NavLink href={routes.procedimientoContratacion}>
-              Contratación
-            </NavLink>
-            {isAuth &&
-              isAdmin(user) && ( // Solo mostrar si está autenticado Y es admin
-                <>
-                  <NavLink href={routes.userAdmin}>Usuarios</NavLink>
-                  {/* <NavLink href={routes.home}>Admin</NavLink> */}{' '}
-                  {/* Considera una ruta específica para Admin si es diferente de home */}
-                </>
-              )}
-            {isAuth &&
-              isOperator(user) && ( // Solo mostrar si está autenticado Y es operador
-                <>
-                  {/* <NavLink href={routes.home}>Operador</NavLink> */}{' '}
-                  {/* Considera una ruta específica para Operador */}
-                </>
-              )}
-          </div>
-        </div>
+        {/* Overlay Mobile */}
+        {isOpen && (
+          <div className='fixed inset-0 z-40 h-screen w-full bg-blueP md:hidden'>
+            <div className='flex flex-col h-full p-4'>
+              <div className='flex justify-between items-center mb-8'>
+                <span className='text-2xl font-bold'>Menú</span>
+                <IoClose
+                  size={28}
+                  onClick={closeMenu}
+                  className='cursor-pointer'
+                />
+              </div>
 
-        {/* Auth Links Desktop (Opcional, si quieres login/logout visible en desktop) */}
-        <div className='hidden md:flex items-center gap-3 lg:gap-5'>
-          {!isAuth ? (
-            <NavLink href={routes.login}>Login</NavLink>
-          ) : (
-            <button
-              onClick={() => {
-                resetUserData();
-                // Opcional: redirigir a home o login page
-                // router.push(routes.home);
-              }}
-              className='flex items-center gap-2 px-3 py-2 text-sm transition hover:text-greenP lg:text-base lg:px-4'
-            >
-              <IoLogOut className='text-xl' />
-              Salir
-            </button>
-          )}
-        </div>
-
-        {/* Mobile Menu Overlay */}
-        <div
-          className={`fixed inset-0 z-40 h-screen w-full bg-blueP transition-transform duration-300 ease-in-out md:hidden ${
-            isOpen ? 'translate-x-0' : '-translate-x-full' // Cambiado a translate-x para un slide desde la izquierda (o usa translate-y como tenías)
-          }`}
-        >
-          <div className='flex flex-col h-full'>
-            <div className='flex items-center justify-between p-4 border-b border-white/10'>
-              <Link href={routes.home} onClick={closeMenu}>
-                {/* Puedes poner un logo más pequeño aquí si quieres */}
-                <span className='text-xl font-bold'>DFYF</span>
-              </Link>
-              <button
-                className='p-2 text-3xl transition hover:text-greenP'
-                onClick={closeMenu}
-                aria-label='Cerrar menú'
-              >
-                <IoClose />
-              </button>
-            </div>
-
-            <nav className='flex flex-col items-center flex-grow gap-3 p-4 overflow-y-auto pt-6'>
-              <MobileNavLink href={routes.home} onClick={closeMenu}>
-                Inicio
-              </MobileNavLink>
-              <MobileNavLink href={routes.mision} onClick={closeMenu}>
-                Misión
-              </MobileNavLink>
-              <MobileNavLink href={routes.vision} onClick={closeMenu}>
-                Visión
-              </MobileNavLink>
-              <MobileNavLink href={routes.manualEtica} onClick={closeMenu}>
-                Ética
-              </MobileNavLink>
-              <MobileNavLink
-                href={routes.procedimientoContratacion}
-                onClick={closeMenu}
-              >
-                Contratación
-              </MobileNavLink>
-
-              {isAuth &&
-                isAdmin(user) && ( // Solo mostrar si está autenticado Y es admin
+              <div className='flex flex-col gap-4'>
+                {!isAuth || !isAdmin(user) ? (
                   <>
-                    <MobileNavLink href={routes.userAdmin} onClick={closeMenu}>
+                    <MobileNavLink href={routes.home} onClick={closeMenu}>
+                      Inicio
+                    </MobileNavLink>
+                    <MobileNavLink href={routes.mision} onClick={closeMenu}>
+                      Misión
+                    </MobileNavLink>
+                    <MobileNavLink href={routes.vision} onClick={closeMenu}>
+                      Visión
+                    </MobileNavLink>
+                    <MobileNavLink
+                      href={routes.manualEtica}
+                      onClick={closeMenu}
+                    >
+                      Ética
+                    </MobileNavLink>
+                    <MobileNavLink
+                      href={routes.procedimientoContratacion}
+                      onClick={closeMenu}
+                    >
+                      Contratación
+                    </MobileNavLink>
+                  </>
+                ) : (
+                  <>
+                    <MobileNavLink href={routes.home} onClick={closeMenu}>
+                      Dashboard
+                    </MobileNavLink>
+                    <MobileNavLink href={routes.home} onClick={closeMenu}>
                       Usuarios
                     </MobileNavLink>
-                    {/* <MobileNavLink href={routes.home} onClick={closeMenu}>Admin</MobileNavLink> */}
+                    <MobileNavLink href={routes.home} onClick={closeMenu}>
+                      Empresas
+                    </MobileNavLink>
+                    <MobileNavLink href={routes.home} onClick={closeMenu}>
+                      Pagos
+                    </MobileNavLink>
+                    <MobileNavLink href={routes.home} onClick={closeMenu}>
+                      Operaciones
+                    </MobileNavLink>
+                    <MobileNavLink href={routes.home} onClick={closeMenu}>
+                      Liquidaciones
+                    </MobileNavLink>
                   </>
                 )}
 
-              {isAuth &&
-                isOperator(user) && ( // Solo mostrar si está autenticado Y es operador
-                  <>
-                    {/* <MobileNavLink href={routes.home} onClick={closeMenu}>Operador</MobileNavLink> */}
-                  </>
-                )}
-
-              <div className='w-full border-t border-white/20 my-6'></div>
-
-              {isAuth ? (
-                <button
-                  onClick={() => {
-                    resetUserData();
-                    closeMenu();
-                    // Opcional: redirigir a home o login page
-                    // router.push(routes.home);
-                  }}
-                  className='flex w-full max-w-xs items-center justify-center gap-2 rounded-md bg-white/10 py-3 text-lg transition hover:bg-white/20'
-                >
-                  <IoLogOut className='text-xl' />
-                  Cerrar Sesión
-                </button>
-              ) : (
-                <MobileNavLink
-                  href={routes.login}
-                  onClick={closeMenu}
-                  isButtonLike={true} // Prop opcional para estilizar como botón
-                >
-                  Login
-                </MobileNavLink>
-              )}
-            </nav>
+                <div className='mt-8'>
+                  {isAuth ? (
+                    <button
+                      onClick={() => {
+                        resetUserData();
+                        closeMenu();
+                      }}
+                      className='w-full flex justify-center items-center gap-2 py-3 bg-greenP rounded-lg'
+                    >
+                      <IoLogOut /> Cerrar Sesión
+                    </button>
+                  ) : (
+                    <MobileNavLink
+                      href={routes.login}
+                      onClick={closeMenu}
+                      isButton
+                    >
+                      Iniciar Sesión
+                    </MobileNavLink>
+                  )}
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
+        )}
       </nav>
     </div>
   );
 };
 
-// Componentes auxiliares (NavLink no necesita cambios importantes)
-const NavLink: React.FC<{
+// Componentes auxiliares (se mantienen igual)
+const NavLink = ({
+  href,
+  children,
+}: {
   href: string;
   children: React.ReactNode;
-}> = ({ href, children }) => (
+}) => (
   <Link
     href={href}
-    className='px-3 py-2 text-sm font-medium transition rounded-md hover:text-greenP hover:bg-white/5 lg:text-base lg:px-4' // 'hover:text-verde' cambiado a 'hover:text-greenP'
+    className='px-3 py-2 transition hover:text-greenP hover:underline underline-offset-4'
   >
     {children}
   </Link>
 );
 
-// MobileNavLink modificado ligeramente para posible estilo de botón
-const MobileNavLink: React.FC<{
+const MobileNavLink = ({
+  href,
+  onClick,
+  children,
+  isButton = false,
+}: {
   href: string;
   onClick: () => void;
   children: React.ReactNode;
-  isButtonLike?: boolean; // Nueva prop opcional
-}> = ({ href, onClick, children, isButtonLike }) => (
+  isButton?: boolean;
+}) => (
   <Link
     href={href}
     onClick={onClick}
-    className={`w-full max-w-xs py-3 text-center text-lg rounded-md transition hover:bg-white/10 ${
-      isButtonLike
-        ? 'bg-greenP text-white hover:bg-greenP/90'
-        : 'hover:text-greenP' // 'hover:text-verde' cambiado
+    className={`py-3 px-4 text-lg rounded-lg transition-colors ${
+      isButton ? 'bg-greenP text-white hover:bg-greenP/90' : 'hover:bg-white/10'
     }`}
   >
     {children}

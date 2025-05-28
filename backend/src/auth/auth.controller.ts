@@ -4,6 +4,7 @@ import {
   CreateEmpleadoDto,
   LoginUserDto,
 } from '../empleados/dto/create-empleado.dto';
+import { Roles } from './decorators/roles.decorator';
 
 @Controller('auth')
 export class AuthController {

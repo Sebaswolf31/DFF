@@ -9,7 +9,7 @@ const axiosApiBack = axios.create({
 
 export const registerService = async (userData: IUser, token: string) => {
   try {
-    const response = await axiosApiBack.post('/auth/register', userData, {
+    const response = await axiosApiBack.post('/auth/singup', userData, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -29,7 +29,7 @@ export const registerService = async (userData: IUser, token: string) => {
 export const loginService = async (userData: IUserLogin) => {
   try {
     console.log('Intentando hacer login con:', userData);
-    const user = await axiosApiBack.post('/auth/login', userData);
+    const user = await axiosApiBack.post('/auth/signin', userData);
     console.log('Respuesta completa del login:', user);
     console.log('user en servicio', user.data);
 
